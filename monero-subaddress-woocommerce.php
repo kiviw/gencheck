@@ -7,6 +7,12 @@
  */
 
 function generate_monero_subaddress_on_order($order_id) {
+    // Debugging: Before retrieving order ID
+    error_log('Debugging: Before retrieving order ID');
+    $order_id = wc_get_checkout_order_received_id();
+    // Debugging: After retrieving order ID
+    error_log('Debugging: After retrieving order ID');
+
     $rpc_url = 'http://127.0.0.1:18080/json_rpc'; // Replace with your Monero RPC URL
 
     $request_body = json_encode([
@@ -58,8 +64,12 @@ add_action('woocommerce_new_order', 'generate_monero_subaddress_on_order', 10, 1
 add_action('woocommerce_before_checkout_form', 'display_monero_subaddress_on_checkout');
 
 function display_monero_subaddress_on_checkout() {
+    // Debugging: Before retrieving subaddress
+    error_log('Debugging: Before retrieving subaddress');
     $order_id = wc_get_checkout_order_received_id();
     $subaddress = get_post_meta($order_id, '_monero_subaddress', true);
+    // Debugging: After retrieving subaddress
+    error_log('Debugging: After retrieving subaddress');
 
     if (!empty($subaddress)) {
         echo '<p id="monero-subaddress-container"><strong>Monero Subaddress:</strong> ' . esc_html($subaddress) . '</p>';
